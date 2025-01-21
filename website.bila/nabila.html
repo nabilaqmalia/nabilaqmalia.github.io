@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INNOVATION GALLERY</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #fff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a4775;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0,0,0,0.7)), url('https://source.unsplash.com/random/1920x1080');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Search Bar */
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            background: white;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            background: #4a4775;
+            color: white;
+        }
+
+        /* Gallery */
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .photo-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+
+    /* Style untuk gambar yang bisa diklik */
+    .photo-card img {
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .photo-card img:active {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 90%;
+        max-height: 90vh;
+        z-index: 1000;
+        object-fit: contain;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+    }
+
+        .photo-info {
+            padding: 20px;
+        }
+
+        .photo-info h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .photo-info p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .photo-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .edit-btn {
+            background-color: #4a4775;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4a4775;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #363157;
+        }
+
+        /* Add Photo Button */
+        .add-photo-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #4a4775;
+            border-radius: 50%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+    .add-photo-btn:hover {
+        background-color: #363157;
+    }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="nav-brand">INNOVATION GALLERY</a>
+        <div class="nav-links">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link" id="loginLink">Login</a>
+            <a href="#" class="nav-link" id="logoutLink">Logout</a>
+            <a href="#" class="nav-link" id="registerLink">Register</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>INNOVATION GALLERY</h1>
+        <p>Koleksi foto-foto terbaik dari fotografer berbakat</p>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Cari foto...">
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="categories">
+        <button class="category-btn active" data-category="all">Semua</button>
+        <button class="category-btn" data-category="nature">Alam</button>
+        <button class="category-btn" data-category="architecture">Arsitektur</button>
+        <button class="category-btn" data-category="portrait">Potret</button>
+        <button class="category-btn" data-category="street">Street</button>
+    </div>
+
+    <!-- Gallery -->
+    <div class="gallery-container">
+        <div class="gallery" id="photoGallery">
+            <!-- Photos will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Add Photo Button -->
+    <button class="add-photo-btn" id="addPhotoBtn">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+<<!-- log-->
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Logout Confirmation</h2>
+        <div style="text-align: center; margin: 20px 0;">
+            <i class="fas fa-sign-out-alt" style="font-size: 48px; color: #4a4775; margin-bottom: 15px;"></i>
+            <p>Are you sure you want to logout?</p>
+            <p style="color: #666; font-size: 0.9em; margin-top: 10px;">You will need to login again to access all features.</p>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button onclick="confirmLogout()" class="submit-btn" style="width: auto; padding: 10px 20px; background-color: #dc3545;">Yes, Logout</button>
+            <button onclick="closeLogoutModal()" class="submit-btn" style="width: auto; padding: 10px 20px; background-color: #6c757d;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Register</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input type="text" id="regUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" required>
+                </div>
+                <button type="submit" class="submit-btn">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Upload Photo Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Upload Photo</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="photoTitle">Title</label>
+                    <input type="text" id="photoTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="photoFile">Photo</label>
+                    <input type="file" id="photoFile" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="photoCategory">Category</label>
+                    <select id="photoCategory" required>
+                        <option value="nature">Alam</option>
+                        <option value="architecture">Arsitektur</option>
+                        <option value="portrait">Potret</option>
+                        <option value="street">Street</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Upload</button>
+            </form>
+        </div>
+    </div>
+
+   
+    <footer>
+        <p>&copy; 2024 Innovation Gallery. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+            const uploadModal = document.getElementById('uploadModal');
+            const loginLink = document.getElementById('loginLink');
+            const logoutLink = document.getElementById('logoutLink');
+            const registerLink = document.getElementById('registerLink');
+            const addPhotoBtn = document.getElementById('addPhotoBtn');
+            const closeButtons = document.getElementsByClassName('close');
+            const searchBar = document.querySelector('.search-bar');
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            
+            // Sample photo data
+            let photos = [
+                {
+                    id: 1,
+                    title: 'Mountain View',
+                    photographer: 'John Doe',
+                    category: 'nature',
+                    imageUrl: 'jpeg/foto1.jpeg'
+                },
+                {
+                    id: 2,
+                    title: 'City Lights',
+                    photographer: 'Jane Smith',
+                    category: 'architecture',
+                    imageUrl: 'jpeg/foto2.jpeg'
+                },
+                {
+                    id: 3,
+                    title: 'City Lights',
+                    photographer: 'Jane Smith',
+                    category: 'architecture',
+                    imageUrl: 'jpeg/foto3.jpeg'
+                },
+                {
+                    id: 4,
+                    title: 'City Lights',
+                    photographer: 'Jane Smith',
+                    category: 'architecture',
+                    imageUrl: 'jpeg/foto4.jpeg'
+                },
+                {
+                    id: 5,
+                    title: 'Portrait Study',
+                    photographer: 'Mike Johnson',
+                    category: 'portrait',
+                    imageUrl: 'jpeg/foto5.jpeg'
+                }
+
+
+            ];
+
+            // Initialize gallery
+            function loadPhotos(filter = 'all') {
+                const gallery = document.getElementById('photoGallery');
+                gallery.innerHTML = '';
+                
+                photos.filter(photo => filter === 'all' || photo.category === filter)
+                    .forEach(photo => {
+                        const photoCard = createPhotoCard(photo);
+                        gallery.appendChild(photoCard);
+                    });
+            }
+
+            function createPhotoCard(photo) {
+                const div = document.createElement('div');
+                div.className = 'photo-card';
+                div.innerHTML = `
+                    <img src="${photo.imageUrl}" alt="${photo.title}">
+                    <div class="photo-info">
+                        <h3>${photo.title}</h3>
+                        <p>By: ${photo.photographer}</p>
+                        <div class="photo-actions">
+                            <button class="edit-btn" onclick="editPhoto(${photo.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="delete-btn" onclick="deletePhoto(${photo.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return div;
+            }
+
+            // Event Listeners
+            loginLink.onclick = () => loginModal.style.display = 'block';
+            logoutLink.onclick = () => logoutModal.style.display = 'block';
+            registerLink.onclick = () => registerModal.style.display = 'block';
+            addPhotoBtn.onclick = () => uploadModal.style.display = 'block';
+
+            Array.from(closeButtons).forEach(button => {
+                button.onclick = function() {
+                    this.closest('.modal').style.display = 'none';
+                }
+            });
+
+            window.onclick = function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            }
+
+            // Category filtering
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    loadPhotos(button.dataset.category);
+                });
+            });
+
+            // Search functionality
+            searchBar.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const gallery = document.getElementById('photoGallery');
+                const cards = gallery.getElementsByClassName('photo-card');
+
+                Array.from(cards).forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const photographer = card.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || photographer.includes(searchTerm)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // Form submissions
+            document.getElementById('loginForm').onsubmit = function(e) {
+                e.preventDefault();
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+
+                // Simple authentication
+                if (username === 'admin' && password === 'admin123') {
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    loginModal.style.display = 'none';
+                    updateLoginState(true);
+                    alert('Login successful!');
+                } else {
+                    alert('Invalid credentials!');
+                }
+            };
+
+            document.getElementById('registerForm').onsubmit = function(e) {
+                e.preventDefault();
+                const username = document.getElementById('regUsername').value;
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+
+                // Here you would typically send this to a server
+                alert('Registration successful! Please login.');
+                registerModal.style.display = 'none';
+            };
+
+            document.getElementById('uploadForm').onsubmit = function(e) {
+                e.preventDefault();
+                const title = document.getElementById('photoTitle').value;
+                const category = document.getElementById('photoCategory').value;
+                const file = document.getElementById('photoFile').files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const newPhoto = {
+                            id: photos.length + 1,
+                            title: title,
+                            photographer: 'Current User',
+                            category: category,
+                            imageUrl: e.target.result
+                        };
+                        
+                        photos.push(newPhoto);
+                        loadPhotos(document.querySelector('.category-btn.active').dataset.category);
+                        uploadModal.style.display = 'none';
+                        alert('Photo uploaded successfully!');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            // Initialize
+            loadPhotos();
+            updateLoginState(sessionStorage.getItem('isLoggedIn') === 'true');
+        });
+
+        // Helper functions
+        function updateLoginState(isLoggedIn) {
+            const loginLink = document.getElementById('loginLink');
+            const registerLink = document.getElementById('registerLink');
+            const addPhotoBtn = document.getElementById('addPhotoBtn');
+            
+            if (isLoggedIn) {
+                loginLink.textContent = 'Logout';
+                loginLink.onclick = logout;
+                registerLink.style.display = 'none';
+                addPhotoBtn.style.display = 'flex';
+                document.querySelectorAll('.photo-actions').forEach(actions => {
+                    actions.style.display = 'flex';
+                });
+            } else {
+                loginLink.textContent = 'Login';
+                loginLink.onclick = () => document.getElementById('loginModal').style.display = 'block';
+                registerLink.style.display = '';
+                addPhotoBtn.style.display = 'none';
+                document.querySelectorAll('.photo-actions').forEach(actions => {
+                    actions.style.display = 'none';
+                });
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('isLoggedIn');
+                updateLoginState(false);
+                alert('Logged out successfully!');
+            }
+        }
+
+        function logout() {
+        document.getElementById('logoutModal').style.display = 'block';
+    }
+
+    function closeLogoutModal() {
+        document.getElementById('logoutModal').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        // Clear all user session data
+        sessionStorage.clear();
+        localStorage.removeItem('userProfile');
+        
+        // Reset UI state
+        updateLoginState(false);
+        
+        // Clear any sensitive data from memory
+        photos = photos.filter(photo => !photo.isPrivate);
+        
+        // Reset forms
+        document.getElementById('loginForm').reset();
+        document.getElementById('uploadForm').reset();
+        
+        // Close logout modal
+        closeLogoutModal();
+        
+        // Redirect to home page and show success message
+        window.scrollTo(0, 0);
+        const successMsg = document.createElement('div');
+        successMsg.style.cssText = `
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        `;
+        successMsg.textContent = 'Logged out successfully! See you again soon.';
+        document.body.appendChild(successMsg);
+        
+        // Remove success message after 3 seconds
+        setTimeout(() => {
+            successMsg.remove();
+        }, 3000);
+
+        // Load default photos
+        loadPhotos('all');
+    }
+
+    // Add this to your existing modal close handlers
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+        }
+    }
+
+
+        function deletePhoto(id) {
+            if (confirm('Are you sure you want to delete this photo?')) {
+                photos = photos.filter(photo => photo.id !== id);
+                loadPhotos(document.querySelector('.category-btn.active').dataset.category);
+            }
+        }
+
+        function editPhoto(id) {
+            // Implement edit functionality
+            alert('Edit loging terlebih dahulu!');
+        }
+        // Edit functfunction createPhotoCard(photo) {
+    
+
+    </script>
+
+<script>
+    // Add this to your existing script
+    document.getElementById('uploadForm').onsubmit = function(e) {
+        e.preventDefault();
+        const title = document.getElementById('photoTitle').value;
+        const category = document.getElementById('photoCategory').value;
+        const file = document.getElementById('photoFile').files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const newPhoto = {
+                    id: photos.length + 1,
+                    title: title,
+                    photographer: 'Current User',
+                    category: category,
+                    imageUrl: e.target.result
+                };
+                
+                photos.push(newPhoto);
+                loadPhotos(document.querySelector('.category-btn.active').dataset.category);
+                document.getElementById('uploadModal').style.display = 'none';
+                document.getElementById('uploadForm').reset();
+                alert('Photo uploaded successfully!');
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+</script> 
+</html>
